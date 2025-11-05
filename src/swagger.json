@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Smart Parking Lot System API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/entry": {
+      "post": {
+        "summary": "Register vehicle entry and assign a parking spot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "numberPlate": { "type": "string" },
+                  "vehicleType": { "type": "string", "enum": ["MOTORCYCLE", "CAR", "BUS"] }
+                },
+                "required": ["numberPlate", "vehicleType"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Ticket created with assigned spot" },
+          "409": { "description": "Vehicle already parked" },
+          "503": { "description": "No spot available" }
+        }
+      }
+    },
+    "/api/exit": {
+      "post": {
+        "summary": "Record vehicle exit and calculate fee",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ticketId": { "type": "string" },
+                  "numberPlate": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Exit processed with fee" },
+          "404": { "description": "Open ticket not found" }
+        }
+      }
+    },
+    "/api/availability": {
+      "get": {
+        "summary": "Get real-time availability per floor and type",
+        "responses": { "200": { "description": "Availability" } }
+      }
+    },
+    "/api/summary": {
+      "get": {
+        "summary": "Get admin summary of tickets and revenue",
+        "responses": { "200": { "description": "Summary" } }
+      }
+    }
+  }
+}
